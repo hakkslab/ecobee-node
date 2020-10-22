@@ -1,0 +1,25 @@
+{
+  "name": "ecobee-node",
+  "version": "0.1.0",
+  "description": "A node library for interfacing with ecobee APIs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hakkslab/ecobee-node.git"
+  },
+  "author": "Matt Hackmann <hakk@dxprog.com>",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/hakkslab/ecobee-node/issues"
+  },
+  "homepage": "https://github.com/hakkslab/ecobee-node#readme",
+  "devDependencies": {
+    "@types/simple-oauth2": "^4.1.0",
+    "simple-oauth2": "^4.1.0",
+    "typescript": "^4.0.3"
+  }
+}
