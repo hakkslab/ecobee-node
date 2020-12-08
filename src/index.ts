@@ -1,8 +1,9 @@
 import * as request from 'request-promise-native';
 import * as qs from 'querystring';
-import { CoreOptions } from 'request';
 
-const API_URL = 'https://www.ecobee.com/api/1/';
+import config from '../config';
+
+const API_URL = 'https://api.ecobee.com/';
 
 type Dictionary = { [key: string]: any };
 
@@ -23,39 +24,53 @@ class Ecobee {
   }
 
   async getAuthPin() {
+    console.log('get auth pin');
     return this._request({
-      endpoint: '/home/authorize',
-      body: {
+      endpoint: 'authorize',
+      urlParams: {
         response_type: 'ecobeePin',
         scope: 'smartWrite',
-        client_id: this.clientId
+        client_id: this.clientId,
       }
     });
   }
 
-  async authorize() {
-
+  async getToken() {
+    console.log('getting auth token');
+    return this._request({
+      endpoint: 'token',
+      method: HTTP_METHOD.POST,
+      urlParams: {
+        grant_type: 'ecobeePin',
+        code: '9nEOPxMqA37pLZumASHw0RKO',
+        client_id: this.clientId,
+        ecobee_type: 'jwt',
+      }
+    });
   }
 
   private async _request(
     {
       endpoint,
       method = HTTP_METHOD.GET,
-      body = {},
+      body = null,
+      urlParams = {},
       headers
     }: {
       endpoint: string,
       method?: HTTP_METHOD,
       body?: Dictionary,
+      urlParams?: Dictionary,
       headers?: Headers
     }
   ): Promise<any> {
     let url = `${API_URL}${endpoint}`;
     const requestHeaders = { ...headers, Accept: 'application/json' };
-
-    if (method === HTTP_METHOD.GET && body) {
-      url += `?${qs.stringify(body)}`;
+    if (urlParams) {
+      url += `?${qs.stringify(urlParams)}`;
     }
+
+    console.log(url);
 
     let retVal = null;
     try {
@@ -64,23 +79,30 @@ class Ecobee {
         {
           method,
           body,
-          headers: requestHeaders
+          headers: requestHeaders,
         }
       );
+      console.log(response);
       retVal = JSON.parse(response);
+      console.log('no aspliode');
     } catch (err) {
+      //console.error('err');
       console.error('Error making ecobee API request', err);
       throw err;
     }
-
+    console.log('hey');
     return retVal;
   }
 }
 
 async function main() {
-  const ecobee: Ecobee = new Ecobee('Rvo6540P51QZMFQNVoTkaVA6XLErPOXG');
-  const pinResponse = await ecobee.getAuthPin();
-  console.log(pinResponse);
+  const ecobee: Ecobee = new Ecobee(config.ecobeeClientId);
+  try {
+    const pinResponse = await ecobee.getToken();
+    console.log(pinResponse);
+  } catch (err) {
+
+  }
 }
 
 main();
