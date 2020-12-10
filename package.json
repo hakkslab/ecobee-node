@@ -18,8 +18,10 @@
   },
   "homepage": "https://github.com/hakkslab/ecobee-node#readme",
   "devDependencies": {
-    "@types/simple-oauth2": "^4.1.0",
-    "simple-oauth2": "^4.1.0",
+    "@types/request-promise-native": "^1.0.17",
+    "querystring": "^0.2.0",
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.9",
     "typescript": "^4.0.3"
   }
 }
